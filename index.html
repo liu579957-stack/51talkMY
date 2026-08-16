@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>51Talk 马来西亚常用英语CC每日学习打卡</title>
+<style>
+  :root{
+    --bg:#0f1623; --panel:#172033; --panel2:#1e2a40; --line:#2a3850;
+    --txt:#e8eef7; --sub:#9fb0c8; --accent:#3da9fc; --accent2:#ffb454;
+    --green:#36d399; --red:#f87272; --chip:#26344d;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);color:var(--txt);line-height:1.6;font-size:15px}
+  header{padding:18px 16px 12px;background:linear-gradient(135deg,#16233c,#0f1623);
+    border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+  header h1{margin:0;font-size:20px;line-height:1.25}
+  header p{margin:6px 0 0;color:var(--sub);font-size:13px}
+  nav{display:flex;gap:6px;overflow-x:auto;padding:10px 12px 0;background:var(--bg);
+    position:sticky;top:64px;z-index:19;border-bottom:1px solid var(--line)}
+  nav button{flex:0 0 auto;background:var(--panel);color:var(--sub);border:1px solid var(--line);
+    padding:8px 13px;border-radius:20px;font-size:13.5px;cursor:pointer;white-space:nowrap}
+  nav button.on{background:var(--accent);color:#04223c;border-color:var(--accent);font-weight:600}
+  main{padding:14px 12px 80px;max-width:920px;margin:0 auto}
+  .sec{display:none} .sec.on{display:block}
+  .hint{color:var(--sub);font-size:13px;margin:6px 2px 14px}
+  .stat{display:inline-block;background:var(--chip);color:var(--accent2);border-radius:14px;
+    padding:4px 12px;font-size:12.5px;margin:2px 6px 2px 0}
+  .search{width:100%;padding:10px 14px;border-radius:12px;border:1px solid var(--line);
+    background:var(--panel);color:var(--txt);font-size:14px;margin-bottom:12px}
+  .search::placeholder{color:var(--sub)}
+  /* card */
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:13px 14px;margin-bottom:11px;position:relative}
+  .card .en{font-size:18px;font-weight:700;color:#fff;cursor:pointer;display:inline-block}
+  .card .en .spk{font-size:14px;opacity:.6;margin-left:4px}
+  .card .zh{color:var(--accent2);font-size:15px;margin-top:3px}
+  .tag{display:inline-block;background:var(--chip);color:var(--sub);font-size:11px;
+    border-radius:8px;padding:1px 8px;margin-left:8px;vertical-align:middle}
+  .ex{margin-top:9px;background:var(--panel2);border-left:3px solid var(--accent);
+    border-radius:8px;padding:7px 10px;font-size:13.5px;color:var(--txt);cursor:pointer}
+  .ex .lbl{color:var(--accent);font-size:11.5px;margin-right:5px}
+  .ex .spk{opacity:.55;margin-left:5px}
+  .row{margin-top:7px;font-size:13px;color:var(--sub)}
+  .row b{color:var(--txt)}
+  .row.tip{border-left:3px solid var(--green);padding-left:8px}
+  .row.ask{border-left:3px solid var(--accent);padding-left:8px}
+  .row.bg{border-left:3px solid #8b7bf0;padding-left:8px}
+  .row.forbid{border-left:3px solid var(--red);padding-left:8px;color:#ffc9c9}
+  .row.diag{border-left:3px solid var(--accent2);padding-left:8px}
+  .star{position:absolute;top:11px;right:11px;background:none;border:none;color:#3c4d68;
+    font-size:20px;cursor:pointer;line-height:1}
+  .star.on{color:var(--accent2)}
+  .empty{color:var(--sub);text-align:center;padding:40px 10px;font-size:14px}
+  /* daily */
+  .daily-top{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+  .daily-top .pill{background:var(--chip);border-radius:14px;padding:5px 12px;font-size:12.5px;color:var(--sub)}
+  .daily-top .pill b{color:var(--accent2)}
+  .daybar{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:6px}
+  .daychip{flex:0 0 auto;background:var(--panel);border:1px solid var(--line);color:var(--sub);
+    padding:7px 11px;border-radius:12px;font-size:13px;cursor:pointer;text-align:center;min-width:54px}
+  .daychip .dn{font-weight:700;font-size:13px}
+  .daychip .ds{font-size:10.5px;opacity:.7}
+  .daychip.on{background:var(--accent);color:#04223c;border-color:var(--accent)}
+  .daychip.done{background:rgba(54,211,153,.16);border-color:rgba(54,211,153,.5);color:var(--green)}
+  .daychip.done .dn{color:var(--green)}
+  .day-head{margin:6px 2px 12px}
+  .day-head .dt{font-size:18px;font-weight:800;color:#fff}
+  .day-head .dd{color:var(--sub);font-size:13px;margin-top:3px}
+  .card.learned{border-color:rgba(54,211,153,.55);background:rgba(54,211,153,.07)}
+  .card.learned .en{color:var(--green)}
+  .learn-btn{position:absolute;top:11px;right:42px;background:var(--chip);border:1px solid var(--line);
+    color:var(--sub);border-radius:10px;padding:3px 9px;font-size:11.5px;cursor:pointer}
+  .learn-btn.on{background:var(--green);color:#04321f;border-color:var(--green);font-weight:700}
+  .checkin-bar{position:sticky;bottom:0;background:linear-gradient(0deg,var(--bg) 60%,transparent);
+    padding:12px 0 4px;display:flex;align-items:center;gap:10px;margin-top:6px}
+  .checkin-bar .cp{color:var(--sub);font-size:13px;flex:1}
+  .checkin-bar .cp b{color:var(--accent2)}
+  .btn{padding:9px 16px;border-radius:10px;border:1px solid var(--line);
+    background:var(--panel);color:var(--txt);cursor:pointer;font-size:14px}
+  .btn.blue{background:var(--accent);color:#04223c;border-color:var(--accent);font-weight:700}
+  .btn:disabled{opacity:.45;cursor:default}
+  /* sentences */
+  .sent{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:13px 14px;margin-bottom:11px}
+  .sent .en-line{font-size:16px;font-weight:600;cursor:pointer}
+  .sent .en-line .spk{opacity:.55;margin-left:5px;font-size:13px}
+  .sent .zh-line{color:var(--accent2);margin-top:4px;font-size:14px}
+  .sent .num{display:inline-block;background:var(--chip);color:var(--sub);font-size:11px;
+    border-radius:8px;padding:1px 8px;margin-bottom:6px}
+  /* manglish */
+  .mgl{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:13px 14px;margin-bottom:11px}
+  .mgl .exp{font-size:17px;font-weight:700;cursor:pointer}
+  .mgl .exp .spk{opacity:.55;margin-left:5px;font-size:13px}
+  .mgl .row span{color:var(--accent);font-size:11.5px;margin-right:5px}
+  .mgl .risk{margin-top:8px;background:rgba(248,114,114,.12);border:1px solid rgba(248,114,114,.4);
+    color:#ffc9c9;border-radius:8px;padding:7px 10px;font-size:13px}
+  /* company */
+  .qa{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:14px;margin-bottom:12px}
+  .qa .q{font-size:16px;font-weight:700;color:#fff;background:var(--panel2);
+    border-radius:10px;padding:9px 11px;margin-bottom:10px}
+  .qa .blk{margin-top:8px;font-size:14px}
+  .qa .blk .h{font-size:12px;font-weight:700;margin-bottom:2px}
+  .qa .a .h{color:var(--green)} .qa .a{color:#dff5ea}
+  .qa .worry .h{color:var(--accent2)} .qa .next .h{color:var(--accent)}
+  .qa .ban{margin-top:9px;background:rgba(248,114,114,.13);border:1px solid rgba(248,114,114,.4);
+    border-radius:9px;padding:8px 11px}
+  .qa .ban .h{color:var(--red)}
+  /* principles */
+  .rule{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    padding:11px 13px;margin-bottom:10px}
+  .rule .t{font-weight:700;color:var(--accent2)}
+  .pr{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    padding:11px 13px;margin-bottom:11px}
+  .pr .scene{font-size:12px;color:var(--sub);margin-bottom:7px}
+  .pr .bad{background:rgba(248,114,114,.1);border:1px solid rgba(248,114,114,.35);
+    border-radius:8px;padding:7px 10px;font-size:13.5px}
+  .pr .bad .k{color:var(--red);font-size:11px;font-weight:700;margin-right:5px}
+  .pr .good{background:rgba(54,211,153,.1);border:1px solid rgba(54,211,153,.35);
+    border-radius:8px;padding:7px 10px;font-size:13.5px;margin-top:7px}
+  .pr .good .k{color:var(--green);font-size:11px;font-weight:700;margin-right:5px}
+  /* quiz */
+  .quiz-prog{color:var(--sub);font-size:13px;margin-bottom:8px}
+  .quiz-en{font-size:20px;font-weight:700;cursor:pointer;margin:4px 0 10px}
+  .quiz-en .spk{opacity:.55;font-size:14px;margin-left:5px}
+  .quiz-opts{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .opt{padding:13px 10px;border-radius:11px;border:1px solid var(--line);
+    background:var(--panel);color:var(--txt);cursor:pointer;font-size:14.5px;text-align:center}
+  .opt.correct{background:var(--green);color:#04321f;border-color:var(--green)}
+  .opt.wrong{background:var(--red);color:#3a0606;border-color:var(--red)}
+  .opt.dim{opacity:.45}
+  .quiz-score{margin-top:12px;color:var(--sub);font-size:13px}
+  .quiz-score b{color:var(--accent2)}
+  /* about */
+  .about li{margin-bottom:7px;color:var(--sub);font-size:13.5px}
+  .about b{color:var(--txt)}
+  .src{border-left:3px solid var(--accent);padding-left:9px;margin-bottom:9px;font-size:13px;color:var(--sub)}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#000c;
+    color:#fff;padding:9px 18px;border-radius:20px;font-size:13px;opacity:0;transition:.25s;z-index:50}
+  .toast.on{opacity:1}
+  .bar{display:flex;justify-content:space-between;align-items:center;margin:4px 0 12px}
+  .bar .btn{font-size:12.5px;padding:6px 12px}
+</style>
+</head>
+<body>
+<header>
+  <h1>51Talk 马来西亚常用英语CC每日学习打卡</h1>
+  <p>每天一个场景，每日进步一点点！坚持打卡，语言通关！</p>
+</header>
+<nav id="nav">
+  <button data-tab="daily" class="on">📅 每日打卡</button>
+  <button data-tab="vocab">📚 单词</button>
+  <button data-tab="sent">💬 真实句式</button>
+  <button data-tab="mgl">🗣️ Manglish</button>
+  <button data-tab="comp">🏢 公司问答</button>
+  <button data-tab="prin">📝 语言原则</button>
+  <button data-tab="quiz">✅ 测验</button>
+  <button data-tab="fav">⭐ 收藏</button>
+  <button data-tab="about">ℹ️ 关于</button>
+</nav>
+<main>
+  <!-- DAILY -->
+  <section id="daily" class="sec on">
+    <div class="daily-top">
+      <span class="pill">🔥 连续打卡 <b id="streakN">0</b> 天</span>
+      <span class="pill">📚 共 <b id="totalDays">0</b> 天</span>
+      <span class="pill">📅 <span id="todayDate"></span></span>
+    </div>
+    <div class="daybar" id="dayBar"></div>
+    <div class="day-head" id="dayHead"></div>
+    <div id="dayGrid"></div>
+    <div class="checkin-bar" id="checkinBar">
+      <div class="cp">本场景进度 <b id="dayProg">0/0</b></div>
+      <button class="btn blue" id="checkinBtn">✅ 完成今日打卡</button>
+    </div>
+  </section>
+
+  <!-- VOCAB -->
+  <section id="vocab" class="sec">
+    <div class="hint">点英文听发音，点「家长可能说」听中文例句。用分类或搜索快速找词。</div>
+    <div class="chips" id="catChips"></div>
+    <input class="search" id="vocabSearch" placeholder="搜索英文 / 中文 / 家长说法…">
+    <div id="vocabGrid"></div>
+  </section>
+
+  <!-- SENTENCES -->
+  <section id="sent" class="sec">
+    <div class="hint">20 条真实咨询句式 —— 听英文、看中文，练听力识别与 Role Play。</div>
+    <div id="sentBox"></div>
+  </section>
+
+  <!-- MANGLISH -->
+  <section id="mgl" class="sec">
+    <div class="hint">Manglish = 大马式中英夹杂。听懂即可，<b>不要刻意模仿口音或堆 lah/lor</b>。</div>
+    <div id="mglBox"></div>
+  </section>
+
+  <!-- COMPANY -->
+  <section id="comp" class="sec">
+    <div class="hint">客户质疑公司真实性 / 地址时的标准应答。⚠️ 禁区红线千万别踩。</div>
+    <div id="compBox"></div>
+  </section>
+
+  <!-- PRINCIPLES -->
+  <section id="prin" class="sec">
+    <div class="hint">本地化沟通原则：称呼本地化 ＋ 保留关键词 English ＋ 句子保持简单。</div>
+    <div id="prinBox"></div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" class="sec">
+    <div class="bar">
+      <div class="hint" style="margin:0">听英文，选中文含义。从全部单词随机抽题。</div>
+      <button class="btn" onclick="restartQuiz()">🔄 重新开始</button>
+    </div>
+    <div id="quizBox"></div>
+  </section>
+
+  <!-- FAV -->
+  <section id="fav" class="sec">
+    <div class="hint">收藏的生词 / 句式都在这里，方便复习。</div>
+    <div id="favGrid"></div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="sec about">
+    <div class="hint">本学习卡由 Excel 知识库（<b>02_马来西亚客户知识库与术语总表</b>）自动生成。</div>
+    <div id="aboutStats"></div>
+    <h3 style="font-size:15px;margin:18px 0 8px">资料来源</h3>
+    <div id="srcBox"></div>
+  </section>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+const DATA = {"vocab": [{"cat": "课程与试听", "terms": [{"en": "Trial Class / Trial", "ex": "可以先安排Trial吗？", "zh": "体验课、试听课", "note": "课程咨询", "_id": "v0-12"}, {"en": "Free Trial", "ex": "这个是Free Trial对吗？", "zh": "免费体验课", "note": "课程咨询", "_id": "v0-12"}, {"en": "Online Class", "ex": "他没有上过Online Class。", "zh": "线上课程", "note": "课程形式", "_id": "v0-12"}, {"en": "One-to-One / 1-to-1", "ex": "你们是One-to-One的吗？", "zh": "一对一课程", "note": "课程形式", "_id": "v0-12"}, {"en": "Group Class", "ex": "这个不是Group Class吧？", "zh": "小组课、团体课", "note": "课程形式", "_id": "v0-12"}, {"en": "Class Duration", "ex": "一堂课多久？", "zh": "单节课程时长", "note": "时间安排", "_id": "v0-12"}, {"en": "Class Frequency", "ex": "一个星期建议上几次？", "zh": "每周上课频率", "note": "学习频率", "_id": "v0-12"}, {"en": "Schedule", "ex": "我要check一下他的Schedule。", "zh": "上课时间安排", "note": "排课", "_id": "v0-12"}, {"en": "Time Slot", "ex": "晚上还有什么Time Slot？", "zh": "可选时段", "note": "排课", "_id": "v0-12"}, {"en": "Reschedule", "ex": "临时有事可以Reschedule吗？", "zh": "改课时间", "note": "改课", "_id": "v0-12"}, {"en": "Cancel Class", "ex": "如果孩子生病，可以Cancel吗？", "zh": "取消课程", "note": "取消规则", "_id": "v0-12"}, {"en": "Book Class", "ex": "课程要自己Book吗？", "zh": "预约课程", "note": "预约规则", "_id": "v0-12"}]}, {"cat": "老师相关", "terms": [{"en": "Teacher", "ex": "Teacher是哪里的？", "zh": "老师", "note": "教师信息", "_id": "v1-12"}, {"en": "Foreign Teacher", "ex": "是Foreign Teacher吗？", "zh": "外教", "note": "教师类型", "_id": "v1-12"}, {"en": "Filipino Teacher", "ex": "全部是Filipino Teacher吗？", "zh": "菲律宾老师", "note": "教师国籍", "_id": "v1-12"}, {"en": "Native Speaker", "ex": "Teacher是Native Speaker吗？", "zh": "英语母语老师", "note": "教师语言背景", "_id": "v1-12"}, {"en": "Fixed Teacher", "ex": "可以固定Teacher吗？", "zh": "固定老师", "note": "选师规则", "_id": "v1-12"}, {"en": "Choose Teacher", "ex": "可以自己Choose Teacher吗？", "zh": "自选老师", "note": "选师规则", "_id": "v1-12"}, {"en": "Teacher Profile", "ex": "可以先看Teacher Profile吗？", "zh": "老师资料", "note": "教师信息", "_id": "v1-12"}, {"en": "Teacher Qualification", "ex": "Teacher有什么Qualification？", "zh": "老师资质", "note": "教师资质", "_id": "v1-12"}, {"en": "Teaching Experience", "ex": "Teacher有教小孩子的Experience吗？", "zh": "教学经验", "note": "教师经验", "_id": "v1-12"}, {"en": "Accent", "ex": "Teacher的Accent会不会很重？", "zh": "口音", "note": "家长顾虑", "_id": "v1-12"}, {"en": "Patient", "ex": "Teacher会有耐心吗？", "zh": "是否有耐心", "note": "教学风格", "_id": "v1-12"}, {"en": "Interactive", "ex": "Teacher会不会比较Interactive？", "zh": "互动性强不强", "note": "教学风格", "_id": "v1-12"}]}, {"cat": "孩子英语能力", "terms": [{"en": "Speaking", "ex": "我主要想提升他的Speaking。", "zh": "口语", "note": "能力维度", "_id": "v2-19"}, {"en": "Listening", "ex": "Listening还可以，就是不会回答。", "zh": "听力", "note": "能力维度", "_id": "v2-19"}, {"en": "Pronunciation", "ex": "他的Pronunciation不是很清楚。", "zh": "发音", "note": "能力维度", "_id": "v2-19"}, {"en": "Vocabulary", "ex": "他Vocabulary不够。", "zh": "词汇量", "note": "能力维度", "_id": "v2-19"}, {"en": "Grammar", "ex": "你们会教Grammar吗？", "zh": "语法", "note": "能力维度", "_id": "v2-19"}, {"en": "Sentence", "ex": "他不会讲完整Sentence。", "zh": "完整句子", "note": "表达能力", "_id": "v2-19"}, {"en": "Fluency", "ex": "我想让他讲话更Fluent。", "zh": "流利度", "note": "表达能力", "_id": "v2-19"}, {"en": "Confidence", "ex": "他会，可是没有Confidence。", "zh": "自信心", "note": "情绪与表达", "_id": "v2-19"}, {"en": "Comprehension", "ex": "他的Comprehension怎样？", "zh": "理解能力", "note": "能力维度", "_id": "v2-19"}, {"en": "Level", "ex": "他现在是什么Level？", "zh": "英语水平", "note": "水平判断", "_id": "v2-19"}, {"en": "Beginner", "ex": "他是Beginner，完全不会讲。", "zh": "初学者", "note": "水平描述", "_id": "v2-19"}, {"en": "Intermediate", "ex": "他应该是Intermediate。", "zh": "中级", "note": "水平描述", "_id": "v2-19"}, {"en": "Advanced", "ex": "有没有适合Advanced student的？", "zh": "高阶", "note": "水平描述", "_id": "v2-19"}, {"en": "Shy", "ex": "他比较Shy，不敢开口。", "zh": "害羞", "note": "性格与表达", "_id": "v2-19"}, {"en": "Slow Response", "ex": "他回答会比较Slow。", "zh": "回应较慢", "note": "课堂表现", "_id": "v2-19"}, {"en": "Full Sentence", "ex": "他只会回答单词，不会Full Sentence。", "zh": "完整句表达", "note": "表达能力", "_id": "v2-19"}, {"en": "Conversation", "ex": "我想让他可以日常Conversation。", "zh": "日常对话", "note": "学习目标", "_id": "v2-19"}, {"en": "Public Speaking", "ex": "我比较注重Public Speaking。", "zh": "公众演讲", "note": "学习目标", "_id": "v2-19"}, {"en": "Presentation", "ex": "学校经常要做Presentation。", "zh": "演示、课堂展示", "note": "校内场景", "_id": "v2-19"}]}, {"cat": "测评与学习反馈", "terms": [{"en": "Assessment", "ex": "Trial后会有Assessment吗？", "zh": "英语测评", "note": "测评", "_id": "v3-14"}, {"en": "Assessment Report", "ex": "可以发Assessment Report给我吗？", "zh": "测评报告", "note": "测评结果", "_id": "v3-14"}, {"en": "Level Test", "ex": "需要先做Level Test吗？", "zh": "水平测试", "note": "测评", "_id": "v3-14"}, {"en": "Teacher Feedback", "ex": "Teacher有什么Feedback？", "zh": "老师反馈", "note": "课后反馈", "_id": "v3-14"}, {"en": "Learning Report", "ex": "你们会有Learning Report吗？", "zh": "学习报告", "note": "学习追踪", "_id": "v3-14"}, {"en": "Progress Report", "ex": "怎样知道孩子有没有Progress？", "zh": "进步报告", "note": "学习追踪", "_id": "v3-14"}, {"en": "Learning Progress", "ex": "多久可以看到Learning Progress？", "zh": "学习进度", "note": "效果询问", "_id": "v3-14"}, {"en": "Weakness", "ex": "他最大的Weakness是什么？", "zh": "薄弱项", "note": "能力诊断", "_id": "v3-14"}, {"en": "Strength", "ex": "Teacher觉得他的Strength在哪里？", "zh": "优势", "note": "能力诊断", "_id": "v3-14"}, {"en": "Improvement Area", "ex": "他最需要Improve什么？", "zh": "待提升部分", "note": "能力诊断", "_id": "v3-14"}, {"en": "Learning Plan", "ex": "你们会给Learning Plan吗？", "zh": "学习计划", "note": "学习规划", "_id": "v3-14"}, {"en": "Curriculum", "ex": "你们用什么Curriculum？", "zh": "课程体系", "note": "课程内容", "_id": "v3-14"}, {"en": "Syllabus", "ex": "Syllabus是跟学校的吗？", "zh": "教学大纲", "note": "课程内容", "_id": "v3-14"}, {"en": "Material", "ex": "上课用什么Material？", "zh": "教材、学习资料", "note": "课程内容", "_id": "v3-14"}]}, {"cat": "课程内容与学习目标", "terms": [{"en": "Phonics", "ex": "你们有教Phonics吗？", "zh": "自然拼读", "note": "课程内容", "_id": "v4-15"}, {"en": "Reading", "ex": "我想加强Reading。", "zh": "阅读", "note": "能力目标", "_id": "v4-15"}, {"en": "Writing", "ex": "会不会教Writing？", "zh": "写作", "note": "能力目标", "_id": "v4-15"}, {"en": "Cambridge", "ex": "课程是Cambridge syllabus吗？", "zh": "剑桥体系", "note": "课程体系", "_id": "v4-15"}, {"en": "CEFR", "ex": "你们是按照CEFR Level吗？", "zh": "欧洲语言共同标准", "note": "能力标准", "_id": "v4-15"}, {"en": "School English", "ex": "可以跟学校English配合吗？", "zh": "校内英语", "note": "校内衔接", "_id": "v4-15"}, {"en": "Academic English", "ex": "有没有Academic English？", "zh": "学术英语", "note": "课程方向", "_id": "v4-15"}, {"en": "Daily Conversation", "ex": "我想先加强Daily Conversation。", "zh": "日常会话", "note": "课程方向", "_id": "v4-15"}, {"en": "Interview Preparation", "ex": "可以准备School Interview吗？", "zh": "面试准备", "note": "升学场景", "_id": "v4-15"}, {"en": "International School", "ex": "他明年准备去International School。", "zh": "国际学校", "note": "学校类型", "_id": "v4-15"}, {"en": "Private School", "ex": "以后可能会转Private School。", "zh": "私立学校", "note": "学校类型", "_id": "v4-15"}, {"en": "IGCSE", "ex": "有没有对IGCSE有帮助？", "zh": "国际中学课程", "note": "升学课程", "_id": "v4-15"}, {"en": "IELTS", "ex": "以后可以接IELTS吗？", "zh": "雅思", "note": "考试目标", "_id": "v4-15"}, {"en": "English Environment", "ex": "我想让他习惯English Environment。", "zh": "英语环境", "note": "学习目标", "_id": "v4-15"}, {"en": "Learning Habit", "ex": "主要想培养Learning Habit。", "zh": "学习习惯", "note": "学习目标", "_id": "v4-15"}]}, {"cat": "套餐价格与付款", "terms": [{"en": "Package", "ex": "有什么Package？", "zh": "课程套餐", "note": "方案", "_id": "v5-21"}, {"en": "Lesson / Class", "ex": "这个Package有多少Lesson？", "zh": "课时", "note": "方案内容", "_id": "v5-21"}, {"en": "Price", "ex": "Price是多少？", "zh": "价格", "note": "价格", "_id": "v5-21"}, {"en": "Promotion", "ex": "现在有什么Promotion？", "zh": "优惠活动", "note": "促销", "_id": "v5-21"}, {"en": "Discount", "ex": "还有Discount吗？", "zh": "折扣", "note": "促销", "_id": "v5-21"}, {"en": "Voucher", "ex": "Voucher怎样用？", "zh": "优惠券", "note": "促销", "_id": "v5-21"}, {"en": "Free Lessons", "ex": "有送Free Lessons吗？", "zh": "赠课", "note": "促销", "_id": "v5-21"}, {"en": "Installment", "ex": "可以做Installment吗？", "zh": "分期付款", "note": "付款方式", "_id": "v5-21"}, {"en": "Monthly Payment", "ex": "一个月大概还多少？", "zh": "每月付款金额", "note": "付款方式", "_id": "v5-21"}, {"en": "Full Payment", "ex": "一定要Full Payment吗？", "zh": "一次性全款", "note": "付款方式", "_id": "v5-21"}, {"en": "Credit Card", "ex": "可以用Credit Card吗？", "zh": "信用卡", "note": "付款渠道", "_id": "v5-21"}, {"en": "Bank Transfer", "ex": "可以Bank Transfer吗？", "zh": "银行转账", "note": "付款渠道", "_id": "v5-21"}, {"en": "Payment Link", "ex": "发Payment Link给我。", "zh": "付款链接", "note": "付款操作", "_id": "v5-21"}, {"en": "Deposit", "ex": "需要先给Deposit吗？", "zh": "订金", "note": "付款操作", "_id": "v5-21"}, {"en": "Budget", "ex": "这个有一点超出Budget。", "zh": "预算", "note": "价格异议", "_id": "v5-21"}, {"en": "Affordable", "ex": "有没有比较Affordable的Package？", "zh": "更能负担的方案", "note": "价格异议", "_id": "v5-21"}, {"en": "Worth It", "ex": "这个Package值得吗？", "zh": "是否值得", "note": "价值判断", "_id": "v5-21"}, {"en": "Expensive", "ex": "有一点Expensive。", "zh": "有点贵", "note": "价格异议", "_id": "v5-21"}, {"en": "Price Per Lesson", "ex": "平均一堂课多少钱？", "zh": "单课价格", "note": "价格比较", "_id": "v5-21"}, {"en": "Validity", "ex": "Package有效期多久？", "zh": "套餐有效期", "note": "使用规则", "_id": "v5-21"}, {"en": "Expiry Date", "ex": "这些课几时Expire？", "zh": "到期时间", "note": "使用规则", "_id": "v5-21"}]}, {"cat": "出勤请假与安排", "terms": [{"en": "Attendance", "ex": "有Attendance要求吗？", "zh": "出勤要求", "note": "出勤", "_id": "v6-11"}, {"en": "Missed Class", "ex": "Missed Class会扣课吗？", "zh": "缺席课程", "note": "缺课规则", "_id": "v6-11"}, {"en": "Make-up Class", "ex": "可以补Make-up Class吗？", "zh": "补课", "note": "补课规则", "_id": "v6-11"}, {"en": "Leave", "ex": "孩子请假怎样处理？", "zh": "请假", "note": "请假规则", "_id": "v6-11"}, {"en": "Class Reminder", "ex": "上课前会有Reminder吗？", "zh": "上课提醒", "note": "提醒", "_id": "v6-11"}, {"en": "Auto Booking", "ex": "系统会Auto Book吗？", "zh": "自动预约", "note": "预约", "_id": "v6-11"}, {"en": "Flexible", "ex": "Schedule够Flexible吗？", "zh": "时间是否灵活", "note": "排课", "_id": "v6-11"}, {"en": "Weekday", "ex": "Weekday晚上可以吗？", "zh": "工作日", "note": "时段", "_id": "v6-11"}, {"en": "Weekend", "ex": "Weekend有什么时间？", "zh": "周末", "note": "时段", "_id": "v6-11"}, {"en": "Peak Hour", "ex": "晚上Peak Hour难不难Book？", "zh": "高峰时段", "note": "时段", "_id": "v6-11"}, {"en": "Lesson Consumption", "ex": "课时怎样扣？", "zh": "课时消耗规则", "note": "扣课规则", "_id": "v6-11"}]}, {"cat": "设备与技术", "terms": [{"en": "Device", "ex": "需要什么Device？", "zh": "上课设备", "note": "设备", "_id": "v7-10"}, {"en": "Tablet / iPad", "ex": "一定要用iPad吗？", "zh": "平板", "note": "设备", "_id": "v7-10"}, {"en": "Laptop", "ex": "Laptop可以上吗？", "zh": "笔记本电脑", "note": "设备", "_id": "v7-10"}, {"en": "Headset", "ex": "需要戴Headset吗？", "zh": "耳机", "note": "设备", "_id": "v7-10"}, {"en": "Internet Connection", "ex": "网络不好会怎样？", "zh": "网络连接", "note": "网络", "_id": "v7-10"}, {"en": "App", "ex": "需要Download什么App？", "zh": "应用程序", "note": "软件", "_id": "v7-10"}, {"en": "Login", "ex": "孩子怎样Login？", "zh": "登录", "note": "账号", "_id": "v7-10"}, {"en": "Technical Issue", "ex": "如果有Technical Issue怎么办？", "zh": "技术问题", "note": "故障", "_id": "v7-10"}, {"en": "Customer Service", "ex": "有Customer Service可以找吗？", "zh": "客服", "note": "支持", "_id": "v7-10"}, {"en": "Technical Support", "ex": "上课进不去找谁？", "zh": "技术支持", "note": "支持", "_id": "v7-10"}]}, {"cat": "决策与异议", "terms": [{"en": "我考虑先。", "ex": "我考虑先。", "zh": "我先考虑一下", "note": "考虑/延后", "_id": "v8-16"}, {"en": "我要和爸爸discuss。", "ex": "我要和爸爸discuss。", "zh": "需要与丈夫商量", "note": "决策人", "_id": "v8-16"}, {"en": "我要check一下Schedule。", "ex": "我要check一下Schedule。", "zh": "需要确认孩子时间", "note": "时间安排", "_id": "v8-16"}, {"en": "我先compare一下。", "ex": "我先compare一下。", "zh": "正在比较其他课程", "note": "竞品比较", "_id": "v8-16"}, {"en": "有一点over budget。", "ex": "有一点over budget。", "zh": "超出预算", "note": "预算", "_id": "v8-16"}, {"en": "我怕他不能commit。", "ex": "我怕他不能commit。", "zh": "担心孩子无法坚持", "note": "坚持度", "_id": "v8-16"}, {"en": "他很容易boring。", "ex": "他很容易boring。", "zh": "孩子容易觉得无聊", "note": "兴趣", "_id": "v8-16"}, {"en": "我怕他坐不住。", "ex": "我怕他坐不住。", "zh": "担心专注力", "note": "专注力", "_id": "v8-16"}, {"en": "Online有效吗？", "ex": "Online有效吗？", "zh": "怀疑线上学习效果", "note": "效果", "_id": "v8-16"}, {"en": "我不要太多Lesson。", "ex": "我不要太多Lesson。", "zh": "不想承担大套餐", "note": "套餐规模", "_id": "v8-16"}, {"en": "可以先拿small package吗？", "ex": "可以先拿small package吗？", "zh": "希望先购买小套餐", "note": "套餐规模", "_id": "v8-16"}, {"en": "我要问孩子先。", "ex": "我要问孩子先。", "zh": "孩子意愿很重要", "note": "孩子决策", "_id": "v8-16"}, {"en": "爸爸还不知道。", "ex": "爸爸还不知道。", "zh": "另一位决策人尚未参与", "note": "决策人", "_id": "v8-16"}, {"en": "最近很busy。", "ex": "最近很busy。", "zh": "当前时间优先级低", "note": "时间", "_id": "v8-16"}, {"en": "下个月再follow up我。", "ex": "下个月再follow up我。", "zh": "延后决定", "note": "跟进", "_id": "v8-16"}, {"en": "我不要一直被call。", "ex": "我不要一直被call。", "zh": "明确希望以WhatsApp沟通", "note": "沟通偏好", "_id": "v8-16"}]}, {"cat": "本地表达", "terms": [{"en": "妈咪 / Mummy", "ex": "—", "zh": "妈妈、主要沟通人", "note": "称呼", "_id": "v9-21"}, {"en": "爸爸 / Daddy", "ex": "—", "zh": "父亲", "note": "称呼", "_id": "v9-21"}, {"en": "出粮", "ex": "—", "zh": "发工资", "note": "本地用语", "_id": "v9-21"}, {"en": "几时", "ex": "—", "zh": "什么时候", "note": "本地用语", "_id": "v9-21"}, {"en": "可以吗？", "ex": "—", "zh": "是否可行", "note": "确认", "_id": "v9-21"}, {"en": "OK吗？", "ex": "—", "zh": "是否合适", "note": "确认", "_id": "v9-21"}, {"en": "先", "ex": "我考虑先", "zh": "先做某件事", "note": "句式习惯", "_id": "v9-21"}, {"en": "罢了", "ex": "一个星期一次罢了", "zh": "而已", "note": "本地用语", "_id": "v9-21"}, {"en": "比较", "ex": "他比较shy", "zh": "更偏向", "note": "程度表达", "_id": "v9-21"}, {"en": "有一点", "ex": "有一点贵", "zh": "程度不高", "note": "程度表达", "_id": "v9-21"}, {"en": "不错", "ex": "—", "zh": "还可以、评价较正面", "note": "评价", "_id": "v9-21"}, {"en": "还好", "ex": "—", "zh": "一般、尚可，不一定是强认可", "note": "评价", "_id": "v9-21"}, {"en": "看看先", "ex": "—", "zh": "先了解或考虑", "note": "考虑", "_id": "v9-21"}, {"en": "Discuss", "ex": "—", "zh": "商量", "note": "动作", "_id": "v9-21"}, {"en": "Check", "ex": "—", "zh": "确认、查看", "note": "动作", "_id": "v9-21"}, {"en": "Arrange", "ex": "—", "zh": "安排", "note": "动作", "_id": "v9-21"}, {"en": "Confirm", "ex": "—", "zh": "确认", "note": "动作", "_id": "v9-21"}, {"en": "Follow up", "ex": "—", "zh": "后续联系", "note": "销售动作", "_id": "v9-21"}, {"en": "Commit", "ex": "—", "zh": "是否能长期坚持或承担", "note": "决策", "_id": "v9-21"}, {"en": "Worth", "ex": "—", "zh": "值不值得", "note": "价值", "_id": "v9-21"}, {"en": "Suitable", "ex": "—", "zh": "是否适合", "note": "适配", "_id": "v9-21"}]}, {"cat": "学校类型与年级", "terms": [{"en": "SK", "full": "Sekolah Kebangsaan", "zh": "国民小学", "ex": "他读SK，所以BM比较强，English普通。", "diag": "确认Listening、Vocabulary及学校实际语言环境", "_id": "v10-13"}, {"en": "SJK(C) / SJKC", "full": "Sekolah Jenis Kebangsaan (Cina)", "zh": "国民型华文小学/华小", "ex": "孩子在华小读Standard 2。", "diag": "成绩与Speaking是否存在差距", "_id": "v10-13"}, {"en": "SJK(T) / SJKT", "full": "Sekolah Jenis Kebangsaan (Tamil)", "zh": "国民型淡米尔小学", "ex": "他是在SJK(T)读书的。", "diag": "确认主要语言与English使用机会", "_id": "v10-13"}, {"en": "SMK", "full": "Sekolah Menengah Kebangsaan", "zh": "国民中学", "ex": "明年他要上SMK。", "diag": "青少年表达、Presentation与学校衔接", "_id": "v10-13"}, {"en": "SMJK", "full": "Sekolah Menengah Jenis Kebangsaan", "zh": "国民型华文中学", "ex": "她现在在SMJK。", "diag": "多语言学习与English实际应用", "_id": "v10-13"}, {"en": "独中", "full": "Independent Chinese Secondary School", "zh": "华文独立中学", "ex": "孩子在独中，功课很多。", "diag": "高效练习、Schedule、表达与升学目标", "_id": "v10-13"}, {"en": "International School", "full": "—", "zh": "国际学校", "ex": "明年准备转International School。", "diag": "学科英语、Interview、Presentation、Confidence", "_id": "v10-13"}, {"en": "Private School", "full": "—", "zh": "私立学校", "ex": "很多科都是English。", "diag": "找出具体学科或表达差距", "_id": "v10-13"}, {"en": "Kindergarten / Preschool", "full": "—", "zh": "幼儿园/学前教育", "ex": "Preschool有教一点Phonics。", "diag": "兴趣、听指令、模仿与开口意愿", "_id": "v10-13"}, {"en": "Standard 1-6", "full": "—", "zh": "政府小学一至六年级", "ex": "My son Standard 3 already.", "diag": "结合学校类型确认", "_id": "v10-13"}, {"en": "Year 1 / Primary 1", "full": "—", "zh": "私立/国际学校或一般小学年级表达", "ex": "他现在Year 2。", "diag": "不要与Standard机械等同，先确认学校体系", "_id": "v10-13"}, {"en": "Form 1-5", "full": "—", "zh": "中一至中五", "ex": "Form 5 this year, very busy.", "diag": "中学生本人意愿、Schedule与目标", "_id": "v10-13"}, {"en": "K1 / Nursery / Reception", "full": "—", "zh": "不同学前阶段", "ex": "她现在K1。", "diag": "确认年龄与实际课堂适应", "_id": "v10-13"}]}, {"cat": "学科与校内场景", "terms": [{"en": "BM / Bahasa Melayu", "zh": "马来语", "ex": "他的BM很好，可是English比较弱。", "ask": "English弱在理解、成绩还是Speaking？", "feedback": "Listening、回应与表达", "_id": "v11-15"}, {"en": "BI / Bahasa Inggeris", "zh": "英语", "ex": "BI teacher today absent.", "ask": "学校老师反馈了什么？", "feedback": "按具体问题观察", "_id": "v11-15"}, {"en": "Bahasa Cina / BC", "zh": "华语", "ex": "华语没有问题，English不敢讲。", "ask": "主要是不会还是不敢？", "feedback": "Sentence与Confidence", "_id": "v11-15"}, {"en": "Mathematics / Maths", "zh": "数学", "ex": "Maths全部是English。", "ask": "题目看不懂还是不会表达解题过程？", "feedback": "Comprehension与学科词汇", "_id": "v11-15"}, {"en": "Science", "zh": "科学", "ex": "Science的题目他看不懂。", "ask": "是Vocabulary、Question理解还是知识点？", "feedback": "Comprehension与解释能力", "_id": "v11-15"}, {"en": "History / Sejarah", "zh": "历史", "ex": "他Sejarah比较弱。", "ask": "是否属于本课程可支持范围？", "feedback": "避免承诺学科补习", "_id": "v11-15"}, {"en": "Homework / Schoolwork", "zh": "作业/学校功课", "ex": "最近Schoolwork比较忙。", "ask": "真实可用Schedule是什么？", "feedback": "安排可持续频率", "_id": "v11-15"}, {"en": "Tuition / Group Tuition", "zh": "补习/小组补习", "ex": "Group Tuition没有机会讲。", "ask": "现有课程解决了什么、没解决什么？", "feedback": "Speaking Time与一对一互动", "_id": "v11-15"}, {"en": "Exam / Test / Assessment", "zh": "考试/测验/校内评估", "ex": "最近要Exam。", "ask": "考试时间和具体English问题？", "feedback": "不制造考试恐惧", "_id": "v11-15"}, {"en": "Report Card / Result / Marks", "zh": "成绩单/成绩/分数", "ex": "这次Result不是很好。", "ask": "成绩问题与口语问题是否一致？", "feedback": "区分校内分数与能力", "_id": "v11-15"}, {"en": "Oral Test", "zh": "口试", "ex": "他最怕Oral Test。", "ask": "怕什么环节？", "feedback": "回应、完整句与Confidence", "_id": "v11-15"}, {"en": "Comprehension / Composition", "zh": "阅读理解/作文", "ex": "Comprehension还可以。", "ask": "线上口语课能支持哪部分？", "feedback": "不夸大Writing支持", "_id": "v11-15"}, {"en": "Presentation / Project", "zh": "展示/项目作业", "ex": "他不会用English介绍Project。", "ask": "学校要求和时间点？", "feedback": "表达结构与Fluency", "_id": "v11-15"}, {"en": "Public Speaking / Debate", "zh": "公众表达/辩论", "ex": "他不敢参加。", "ask": "兴趣、能力还是紧张？", "feedback": "观点组织与Confidence", "_id": "v11-15"}, {"en": "Storytelling / Speech Competition", "zh": "讲故事/演讲比赛", "ex": "她要参加Storytelling。", "ask": "比赛日期和目标？", "feedback": "发音、流利度与表现力", "_id": "v11-15"}]}, {"cat": "地域与客户背景", "terms": [{"en": "Kuala Lumpur / KL", "zh": "吉隆坡", "bg": "私立及国际学校选择较多，工作节奏可能较快", "ask": "您在KL哪个area？孩子读什么学校？", "forbid": "不默认读国际学校或预算高", "_id": "v12-14"}, {"en": "Selangor", "zh": "雪兰莪", "bg": "范围较大，需确认具体区域", "ask": "是在PJ、Subang、Puchong还是其他area？", "forbid": "不把整个州视为同一客群", "_id": "v12-14"}, {"en": "Petaling Jaya / PJ", "zh": "八打灵再也", "bg": "教育资源较多", "ask": "孩子学校主要用什么语言？", "forbid": "不默认English强", "_id": "v12-14"}, {"en": "Subang Jaya", "zh": "梳邦再也", "bg": "私立/国际教育选择较多", "ask": "妈咪主要担心Subject还是Speaking？", "forbid": "不默认学校类型", "_id": "v12-14"}, {"en": "Puchong", "zh": "蒲种", "bg": "华人家庭较多", "ask": "目前读华小、Private还是International School？", "forbid": "不凭华语判断需求", "_id": "v12-14"}, {"en": "Cheras", "zh": "蕉赖", "bg": "横跨KL与Selangor", "ask": "方便确认具体area吗？", "forbid": "不混淆州属", "_id": "v12-14"}, {"en": "Klang", "zh": "巴生", "bg": "华人社群成熟", "ask": "平时主要用华语、BM还是English？", "forbid": "不默认沟通语言", "_id": "v12-14"}, {"en": "Penang", "zh": "槟城", "bg": "华语及福建话常见", "ask": "孩子在学校最常用什么语言？", "forbid": "不假设所有人讲福建话", "_id": "v12-14"}, {"en": "Ipoh", "zh": "怡保", "bg": "生活节奏与KL可能不同", "ask": "妈咪方便Call的时间是几点？", "forbid": "不套用KL作息", "_id": "v12-14"}, {"en": "Johor Bahru / JB", "zh": "新山", "bg": "靠近Singapore，部分家庭跨境工作/升学", "ask": "Singapore规划与English需求有关吗？", "forbid": "不假设跨境、高收入或必去新加坡", "_id": "v12-14"}, {"en": "Melaka", "zh": "马六甲", "bg": "华人文化氛围较浓", "ask": "孩子现在什么学校体系？", "forbid": "不凭地区判断购买力", "_id": "v12-14"}, {"en": "Sabah / Kota Kinabalu", "zh": "沙巴/亚庇", "bg": "东马地区，学校和网络情况因人而异", "ask": "网络、学校语言和Schedule怎样？", "forbid": "不默认网络或假期", "_id": "v12-14"}, {"en": "Sarawak / Kuching", "zh": "砂拉越/古晋", "bg": "华人社群较大，语言环境多元", "ask": "主要用English、BM还是华语？", "forbid": "不以东马概括全部客户", "_id": "v12-14"}, {"en": "Singapore", "zh": "新加坡", "bg": "JB客户可能因工作、学校或未来规划提到", "ask": "是目前工作安排还是孩子未来规划？", "forbid": "不等同于高预算", "_id": "v12-14"}]}, {"cat": "学习体系与考试", "terms": [{"en": "KPM", "full": "Kementerian Pendidikan Malaysia", "zh": "马来西亚教育部", "subcat": "主管机构", "note": "确认政府学校与官方校历时，以KPM资料为准", "_id": "v13-19"}, {"en": "MQA", "full": "Malaysian Qualifications Agency", "zh": "马来西亚学术资格鉴定机构", "subcat": "资格认证", "note": "主要涉及高等教育；普通少儿咨询较少使用", "_id": "v13-19"}, {"en": "KSSR", "full": "Kurikulum Standard Sekolah Rendah", "zh": "小学标准课程", "subcat": "小学课标", "note": "用于理解政府小学体系，不要直接承诺课程完全同步", "_id": "v13-19"}, {"en": "KSSM", "full": "Kurikulum Standard Sekolah Menengah", "zh": "中学标准课程", "subcat": "中学课标", "note": "用于理解政府中学体系", "_id": "v13-19"}, {"en": "DSKP", "full": "Dokumen Standard Kurikulum dan Pentaksiran", "zh": "课程与评估标准文件", "subcat": "课标文件", "note": "家长谈校内要求时可继续确认具体年级与Subject", "_id": "v13-19"}, {"en": "SBELC", "full": "Standard-Based English Language Curriculum", "zh": "标准导向英语课程", "subcat": "英语课程", "note": "资料称其对标CEFR；对外表述须以公司批准资料为准", "_id": "v13-19"}, {"en": "UASA", "full": "Ujian Akhir Sesi Akademik", "zh": "学年终评估", "subcat": "校内评估", "note": "按当年度学校安排理解，不说成全国统一升学考试", "_id": "v13-19"}, {"en": "UPSR", "full": "Ujian Pencapaian Sekolah Rendah", "zh": "已取消的小六考试", "subcat": "旧考试", "note": "仅需听懂老一辈家长表达，不主动用作销售话术", "_id": "v13-19"}, {"en": "PT3", "full": "Pentaksiran Tingkatan 3", "zh": "已取消的中三评估", "subcat": "旧考试", "note": "仅需听懂，不主动使用", "_id": "v13-19"}, {"en": "SPM", "full": "Sijil Pelajaran Malaysia", "zh": "马来西亚教育文凭", "subcat": "全国考试", "note": "面向中学高年级客户，先确认真实目标", "_id": "v13-19"}, {"en": "STPM", "full": "Sijil Tinggi Pelajaran Malaysia", "zh": "马来西亚高级教育文凭", "subcat": "大学预科考试", "note": "较高龄客户可能提及", "_id": "v13-19"}, {"en": "UEC", "full": "Unified Examination Certificate", "zh": "华文独中统一考试", "subcat": "独中考试", "note": "独中客户可能提及；确认年级和语言需求", "_id": "v13-19"}, {"en": "Matrikulasi", "full": "Matriculation Programme", "zh": "大学预科班", "subcat": "大学预科", "note": "升学场景用语", "_id": "v13-19"}, {"en": "IGCSE", "full": "International General Certificate of Secondary Education", "zh": "国际普通中等教育证书", "subcat": "国际课程", "note": "国际学校客户常见", "_id": "v13-19"}, {"en": "A-Level", "full": "General Certificate of Education Advanced Level", "zh": "普通教育高级证书", "subcat": "国际课程", "note": "高中/预科升学场景", "_id": "v13-19"}, {"en": "IB", "full": "International Baccalaureate", "zh": "国际文凭课程", "subcat": "国际课程", "note": "含PYP/MYP/DP等阶段", "_id": "v13-19"}, {"en": "CEFR", "full": "Common European Framework of Reference", "zh": "欧洲语言共同参考框架 A1-C2", "subcat": "语言标准", "note": "仅按正式Assessment与课程资料说明Level", "_id": "v13-19"}, {"en": "KET / PET", "full": "Cambridge English Qualifications", "zh": "剑桥英语考试层级", "subcat": "英语考试", "note": "先确认家长真实考试与能力目标", "_id": "v13-19"}, {"en": "IELTS / TOEFL", "full": "International English Language Testing System / Test of English as a Foreign Language", "zh": "雅思/托福", "subcat": "留学考试", "note": "不要承诺51Talk课程保证达到具体分数", "_id": "v13-19"}]}], "sentences": [{"en": "Ethan现在Speaking不是很好。", "zh": "Ethan 现在的口语不太好。"}, {"en": "他听得懂，但是不会回答Full Sentence。", "zh": "他听得懂，但不会用完整的句子回答。"}, {"en": "Teacher会不会讲华语？", "zh": "老师会不会说中文（华语）？"}, {"en": "可以先安排Trial Class吗？", "zh": "可以先安排一节体验课吗？"}, {"en": "我需要check一下他的Schedule先。", "zh": "我需要先查看一下他的上课时间表。"}, {"en": "这个Package可以Installment吗？", "zh": "这个课程套餐可以分期付款吗？"}, {"en": "我先和爸爸discuss一下。", "zh": "我先和爸爸商量一下。"}, {"en": "有一点over budget。", "zh": "有点超出预算了。"}, {"en": "我怕他不能commit这么多Lesson。", "zh": "我担心他没法坚持上这么多节课。"}, {"en": "孩子比较shy，没有Confidence。", "zh": "孩子比较害羞，没什么自信。"}, {"en": "他学校English还OK，只是不会讲。", "zh": "他在学校英语还行，就是不敢开口说。"}, {"en": "多久可以看到Progress？", "zh": "多久能看到（学习）进步？"}, {"en": "Teacher是固定的吗？", "zh": "老师是固定的吗？"}, {"en": "晚上还有Time Slot吗？", "zh": "晚上还有空档时段吗？"}, {"en": "如果Miss Class，课时会burn吗？", "zh": "如果缺课，课时会被扣掉 / 作废吗？"}, {"en": "可以Reschedule吗？", "zh": "可以改时间吗？"}, {"en": "我想先compare其他课程。", "zh": "我想先对比一下其他课程。"}, {"en": "你把Package发给我看看先。", "zh": "你先把课程套餐发给我看看。"}, {"en": "Payment Link可以WhatsApp给我。", "zh": "付款链接可以用 WhatsApp 发给我。"}, {"en": "我不方便接电话，message我就好。", "zh": "我不方便接电话，发消息给我就行。"}], "manglish": [{"en": "Can or not?", "zh": "行不行？", "scene": "Can pay by installment or not?", "cc": "可以听懂；CC可用更自然的“可以吗？”", "risk": "避免刻意表演本地口音"}, {"en": "Like that lor", "zh": "就这样啦/无奈收尾", "scene": "家长结束话题", "cc": "听懂情绪即可", "risk": "不建议新人主动使用lor"}, {"en": "Study already ah?", "zh": "学过了吗？", "scene": "口语化提问", "cc": "CC用标准自然华语提问即可", "risk": "不必复制句尾ah"}, {"en": "Must lah!", "zh": "一定要的呀", "scene": "强调语气", "cc": "理解即可", "risk": "销售中可能显得施压"}, {"en": "This one very good", "zh": "这个很好", "scene": "中英夹杂", "cc": "可说“这个Package比较适合…”并给理由", "risk": "避免空泛夸奖"}, {"en": "English kena improve", "zh": "英语需要提高", "scene": "kena有“必须/遭遇”等语感", "cc": "听懂，不主动用kena做焦虑话术", "risk": "避免误用"}, {"en": "Not bad lah", "zh": "不错啦", "scene": "家长评价孩子", "cc": "可回应具体Feedback", "risk": "不要只说“not bad”而缺少专业解释"}, {"en": "已经 / already", "zh": "动作已完成", "scene": "My son Standard 3 already.", "cc": "听懂时态和强调", "risk": "不必机械模仿语序"}, {"en": "先", "zh": "先做/先考虑", "scene": "我考虑先。", "cc": "继续诊断真实顾虑并约Follow-up", "risk": "不要误判为同意"}, {"en": "罢了", "zh": "而已", "scene": "一个星期一次罢了。", "cc": "确认频率与顾虑", "risk": "理解程度语气"}, {"en": "出粮", "zh": "发工资", "scene": "等我出粮先。", "cc": "确认具体Payment Timing", "risk": "不要假设固定发薪日"}, {"en": "burn", "zh": "课时被扣/失效", "scene": "Miss Class会burn吗？", "cc": "按正式规则解释", "risk": "不要凭经验回答政策"}], "principles": {"rules": [], "examples": [{"scene": "保持自然、真诚", "bad": "语言原则", "badNote": "原则", "good": "", "goodNote": ""}, {"scene": "只保留家长熟悉的English关键词", "bad": "语言原则", "badNote": "原则", "good": "", "goodNote": ""}, {"scene": "表达正式、生硬", "bad": "不够自然", "badNote": "首次触达", "good": "", "goodNote": ""}, {"scene": "称呼自然、问题易回答", "bad": "更自然", "badNote": "首次触达", "good": "", "goodNote": ""}, {"scene": "书面感强", "bad": "不够自然", "badNote": "家庭决策", "good": "", "goodNote": ""}, {"scene": "尊重家庭决策并提供帮助", "bad": "更自然", "badNote": "家庭决策", "good": "", "goodNote": ""}]}, "company": [{"q": "你们Office在哪里？", "a": "有的妈咪，我们Malaysia在KL有Office，位置在Bangsar South，在 KL Gateway Mall Level 2。课程是Online进行，本地有团队负责服务和支持。", "worry": "公司是否真实、本地是否有人", "next": "确认是否需要地址、服务或到访", "ban": "不自行提供未经确认的完整门牌"}, {"q": "可以过去Office吗？", "a": "我先帮妈咪确认Appointment。Office主要是内部办公地点，不是每天开放Walk-in。", "worry": "能否现场找到人", "next": "了解到访目的并向本地团队确认", "ban": "不承诺随时Walk-in"}, {"q": "你们是China还是Malaysia？", "a": "51Talk是国际Online English教育品牌，在Malaysia有本地业务和服务团队；具体合同与付款主体以正式资料为准。", "worry": "服务与法律主体", "next": "发送正式公司资料", "ban": "不自行扩大解释注册主体"}, {"q": "你人在哪里？", "a": "我目前是中国团队负责Malaysia华人客户的学习顾问，本地在KL Bangsar South有Office和服务团队。", "worry": "为什么由海外团队联系", "next": "解释服务分工", "ban": "不冒充人在马来西亚"}, {"q": "为什么是中国电话？", "a": "现在有中国团队一起服务Malaysia华人客户，课程、Package和服务按Malaysia市场安排。", "worry": "诈骗风险与服务连续性", "next": "通过公司渠道、Trial与正式资料建立信任", "ban": "不回避或不耐烦"}, {"q": "是不是诈骗？", "a": "理解妈咪，Online咨询确实需要小心。正式Package、Payment Link和课程资料都会通过公司渠道发送，也可以先完成Trial、查看Feedback和Assessment再决定。", "worry": "付款安全与真实性", "next": "发送正式渠道、说明核验路径", "ban": "绝不要求私人账户付款"}], "sources": [{"src": "学科相关术语.pdf", "cover": "学校、学科、地域、公司地址", "note": "去重并按新CC使用场景重组"}, {"src": "大马华人日常英语高频词表.docx", "cover": "日常词汇、Manglish、支付与鼓励表达", "note": "区分家长识别词与CC主动用语"}, {"src": "教育制度与英语课程标准英文简称汇总.xlsx", "cover": "学制、考试、学校、国际课程、政策简称", "note": "保留核心简称并增加风险提示"}, {"src": "51Talk马来西亚华人家长线上英语课程常用术语.xlsx", "cover": "课程、教师、能力、测评、套餐、异议、真实句式", "note": "作为完整基础术语库保留"}, {"src": "马来西亚教育部 KPM", "cover": "教育体系与2026校历", "note": "用于校准动态信息"}, {"src": "KPM 2026 Academic Calendar", "cover": "2026政府及政府资助学校校历", "note": "确认2026恢复自然年"}], "days": [{"day": 1, "type": "vocab", "cat": "课程与试听", "title": "课程与试听", "desc": "和家长聊课程、约体验课时的核心词。先搞定这个，才能开口介绍产品。"}, {"day": 2, "type": "vocab", "cat": "老师相关", "title": "老师相关", "desc": "介绍外教、老师稳定性、换老师等话题要用到的词。"}, {"day": 3, "type": "vocab", "cat": "孩子英语能力", "title": "孩子英语能力", "desc": "评估孩子当前水平、听说读写强弱时用的表达。"}, {"day": 4, "type": "vocab", "cat": "测评与学习反馈", "title": "测评与学习反馈", "desc": "做完测评、给家长反馈进步情况时的词。"}, {"day": 5, "type": "vocab", "cat": "课程内容与学习目标", "title": "课程内容与学习目标", "desc": "说明每节课学什么、学习目标怎么设定的词。"}, {"day": 6, "type": "vocab", "cat": "套餐价格与付款", "title": "套餐价格与付款", "desc": "报价、套餐、分期、付款方式相关词（高频成交环节）。"}, {"day": 7, "type": "vocab", "cat": "出勤请假与安排", "title": "出勤请假与安排", "desc": "排课、请假、调课、补课相关词。"}, {"day": 8, "type": "vocab", "cat": "设备与技术", "title": "设备与技术", "desc": "帮家长解决电脑 / 网络 / App 技术问题时的词。"}, {"day": 9, "type": "vocab", "cat": "决策与异议", "title": "决策与异议", "desc": "应对「再想想」「太贵了」「对比别家」等异议时的词。"}, {"day": 10, "type": "vocab", "cat": "本地表达", "title": "本地表达", "desc": "马来西亚家长常用的中英夹杂说法，听懂 + 会接话。"}, {"day": 11, "type": "vocab", "cat": "学校类型与年级", "title": "学校类型与年级", "desc": "识别国小 / 独中 / 国际学校等，判断孩子年级和体系。"}, {"day": 12, "type": "vocab", "cat": "学科与校内场景", "title": "学科与校内场景", "desc": "聊学校科目、考试、校内英语场景时的词。"}, {"day": 13, "type": "vocab", "cat": "地域与客户背景", "title": "地域与客户背景", "desc": "按城市 / 族群背景调整沟通，别乱假设。"}, {"day": 14, "type": "vocab", "cat": "学习体系与考试", "title": "学习体系与考试", "desc": "CEFR、剑桥、雅思等体系和考试的词。"}, {"day": 15, "type": "sentences", "title": "真实客户句式", "desc": "20 条家长真实咨询句子，练听力识别和 Role Play。"}, {"day": 16, "type": "manglish", "title": "Manglish 大马式英语", "desc": "听懂大马式中英夹杂，知道怎么接、注意风险。"}, {"day": 17, "type": "company", "title": "公司真实性问答", "desc": "客户质疑公司 / 地址时的标准应答与禁区红线。"}]};
+
+/* ---------- TTS ---------- */
+function hasCJK(s){ return /[一-鿿]/.test(s); }
+function speak(text){
+  if(!text) return;
+  try{
+    if(!('speechSynthesis' in window)){ toast('当前浏览器不支持发音'); return; }
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang = hasCJK(text) ? 'zh-CN' : 'en-US';
+    u.rate = hasCJK(text) ? 0.95 : 0.85;
+    speechSynthesis.speak(u);
+  }catch(e){ toast('发音失败'); }
+}
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('on'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('on'),1400); }
+
+/* ---------- favorites (localStorage) ---------- */
+const FAV_KEY='my_fav_v1';
+function getFav(){ try{ return JSON.parse(localStorage.getItem(FAV_KEY)||'[]'); }catch(e){ return []; } }
+function isFav(id){ return getFav().includes(id); }
+function toggleFav(id){ const f=getFav(); const i=f.indexOf(id);
+  if(i>=0){ f.splice(i,1); toast('已取消收藏'); } else { f.push(id); toast('★ 已收藏'); }
+  localStorage.setItem(FAV_KEY, JSON.stringify(f)); renderFav(); refreshStars(); }
+
+/* ---------- id -> item resolver ---------- */
+const IDMAP={};
+function dayItems(day){
+  if(day.type==='vocab'){ const c=DATA.vocab.find(v=>v.cat===day.cat); return (c?c.terms:[]).map(t=>({kind:'vocab',id:t._id,...t})); }
+  if(day.type==='sentences'){ return DATA.sentences.map((s,i)=>({kind:'sent',id:'d'+day.day+'-s'+i,en:s.en,zh:s.zh})); }
+  if(day.type==='manglish'){ return DATA.manglish.map((m,i)=>({kind:'mgl',id:'d'+day.day+'-m'+i,en:m.en,zh:m.zh,scene:m.scene,cc:m.cc,risk:m.risk})); }
+  if(day.type==='company'){ return DATA.company.map((c,i)=>({kind:'comp',id:'d'+day.day+'-c'+i,en:c.q,zh:c.a,q:c.q,a:c.a,worry:c.worry,ban:c.ban})); }
+  return [];
+}
+DATA.vocab.forEach(c=>c.terms.forEach(t=>IDMAP[t._id]={kind:'vocab',...t}));
+DATA.sentences.forEach((s,i)=>IDMAP['s'+i]={kind:'sent',en:s.en,zh:s.zh});
+DATA.manglish.forEach((m,i)=>IDMAP['m'+i]={kind:'mgl',en:m.en,zh:m.zh});
+DATA.company.forEach((c,i)=>IDMAP['c'+i]={kind:'comp',en:c.q,zh:c.a});
+DATA.days.forEach(d=>dayItems(d).forEach(it=>{ IDMAP[it.id]={...it}; }));
+
+/* ---------- tabs ---------- */
+function switchTab(name){
+  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on', b.dataset.tab===name));
+  document.querySelectorAll('.sec').forEach(s=>s.classList.toggle('on', s.id===name));
+  if(name==='fav') renderFav();
+  if(name==='quiz') restartQuiz();
+  if(name==='about') renderAbout();
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('#nav button').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+
+/* delegated click for speak / fav / learn */
+document.addEventListener('click', e=>{
+  const spk=e.target.closest('[data-spk]');
+  if(spk){ speak(spk.getAttribute('data-spk')); return; }
+  const st=e.target.closest('[data-fav]');
+  if(st){ toggleFav(st.getAttribute('data-fav')); return; }
+  const lb=e.target.closest('[data-learn]');
+  if(lb){ toggleLearn(lb.getAttribute('data-learn')); return; }
+});
+
+/* =========================================================
+   每日打卡
+   ========================================================= */
+const CK='ddc_checkin_v1', LN='ddc_learned_v1';
+function getCK(){ try{ return JSON.parse(localStorage.getItem(CK)||'{}'); }catch(e){ return {}; } }
+function getLN(){ try{ return JSON.parse(localStorage.getItem(LN)||'{}'); }catch(e){ return {}; } }
+function ymd(dt){ return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0'); }
+function todayStr(){ return ymd(new Date()); }
+function isLearned(dayKey,id){ const L=getLN(); return L[dayKey] && L[dayKey].includes(id); }
+function setLearned(dayKey,id,on){ const L=getLN(); if(!L[dayKey]) L[dayKey]=[];
+  const i=L[dayKey].indexOf(id); if(on&&i<0) L[dayKey].push(id); if(!on&&i>=0) L[dayKey].splice(i,1);
+  localStorage.setItem(LN, JSON.stringify(L)); }
+function isDayDone(dayKey){ return !!getCK()[dayKey]; }
+function checkinDay(dayKey){ const C=getCK(); C[dayKey]=todayStr(); localStorage.setItem(CK, JSON.stringify(C)); }
+function calcStreak(){
+  const dates=new Set(Object.values(getCK()));
+  let streak=0; const d=new Date();
+  if(!dates.has(ymd(d))) d.setDate(d.getDate()-1); // 今天还没打卡则从昨天起算
+  while(dates.has(ymd(d))){ streak++; d.setDate(d.getDate()-1); }
+  return streak;
+}
+
+let curDay = 1;
+function dayKeyOf(day){ return 'day-'+day.day; }
+
+function renderDayBar(){
+  const bar=$('#dayBar');
+  bar.innerHTML = DATA.days.map(d=>{
+    const k=dayKeyOf(d);
+    const done=isDayDone(k);
+    const cls = (d.day===curDay?'on ':'') + (done?'done':'');
+    return '<div class="daychip '+cls+'" data-day="'+d.day+'">'+
+      '<div class="dn">'+(done?'✓ ':'')+'DAY '+d.day+'</div>'+
+      '<div class="ds">'+esc(d.title)+'</div></div>';
+  }).join('');
+  bar.querySelectorAll('.daychip').forEach(ch=>ch.addEventListener('click',()=>{ curDay=+ch.dataset.day; renderDay(); }));
+}
+
+function dayCardHTML(it, dayKey){
+  const learned=isLearned(dayKey, it.id);
+  const favOn=isFav(it.id)?'on':'';
+  let inner='';
+  if(it.kind==='vocab'){
+    const ex=it.ex?'<div class="ex" data-spk="'+esc(it.ex)+'"><span class="lbl">家长可能说</span>'+esc(it.ex)+' <span class="spk">🔊</span></div>':'';
+    inner='<div class="en" data-spk="'+esc(it.en)+'">'+esc(it.en)+' <span class="spk">🔊</span></div>'+
+      '<div class="zh">'+esc(it.zh)+'</div>'+ex+extraRows(it);
+  } else if(it.kind==='sent'){
+    inner='<div class="en" data-spk="'+esc(it.en)+'">'+esc(it.en)+' <span class="spk">🔊</span></div>'+
+      '<div class="zh">'+esc(it.zh)+'</div>';
+  } else if(it.kind==='mgl'){
+    inner='<div class="en" data-spk="'+esc(it.en)+'">'+esc(it.en)+' <span class="spk">🔊</span></div>'+
+      '<div class="zh">'+esc(it.zh)+'</div>'+
+      (it.scene?'<div class="row"><span>场景</span>'+esc(it.scene)+'</div>':'')+
+      (it.cc?'<div class="row ask"><span>CC建议</span>'+esc(it.cc)+'</div>':'')+
+      (it.risk?'<div class="risk">⚠️ '+esc(it.risk)+'</div>':'');
+  } else if(it.kind==='comp'){
+    inner='<div class="q" style="font-size:15px;margin-bottom:8px">🙋 '+esc(it.q)+'</div>'+
+      '<div class="row tip">✅ '+esc(it.a)+'</div>'+
+      (it.worry?'<div class="row"><span>担心</span>'+esc(it.worry)+'</div>':'')+
+      (it.ban?'<div class="risk">⛔ '+esc(it.ban)+'</div>':'');
+  }
+  return '<div class="card '+(learned?'learned':'')+'">'+
+    '<button class="learn-btn '+(learned?'on':'')+'" data-learn="'+esc(it.id)+'">'+(learned?'✓ 已学':'○ 标记已学')+'</button>'+
+    '<button class="star '+favOn+'" data-fav="'+esc(it.id)+'">★</button>'+
+    inner+'</div>';
+}
+
+function renderDay(){
+  const day=DATA.days.find(d=>d.day===curDay);
+  const k=dayKeyOf(day);
+  const items=dayItems(day);
+  // head
+  $('#dayHead').innerHTML='<div class="dt">DAY '+day.day+' · '+esc(day.title)+'</div>'+
+    '<div class="dd">'+esc(day.desc)+'</div>';
+  // grid
+  $('#dayGrid').innerHTML=items.map(it=>dayCardHTML(it,k)).join('') || '<div class="empty">本场景暂无内容</div>';
+  // progress
+  const learnedN=items.filter(it=>isLearned(k,it.id)).length;
+  $('#dayProg').textContent=learnedN+'/'+items.length;
+  // checkin button
+  const done=isDayDone(k);
+  const btn=$('#checkinBtn');
+  btn.disabled=done;
+  btn.textContent= done ? '✅ 今日已打卡' : '✅ 完成今日打卡';
+  renderDayBar();
+}
+
+function toggleLearn(id){
+  const day=DATA.days.find(d=>d.day===curDay);
+  const k=dayKeyOf(day);
+  setLearned(k, id, !isLearned(k,id));
+  renderDay();
+}
+
+function doCheckin(){
+  const day=DATA.days.find(d=>d.day===curDay);
+  const k=dayKeyOf(day);
+  const items=dayItems(day);
+  const learnedN=items.filter(it=>isLearned(k,it.id)).length;
+  if(learnedN < items.length){
+    if(!confirm('本场景还有 '+(items.length-learnedN)+' 个没标记「已学」，确定打卡吗？')) return;
+  }
+  checkinDay(k);
+  renderDay();
+  $('#streakN').textContent=calcStreak();
+  toast('DAY '+day.day+' 打卡成功 🔥');
+}
+$('#checkinBtn').addEventListener('click', doCheckin);
+
+/* ---------- vocab render ---------- */
+let curCat='ALL';
+function buildChips(){
+  const c=$('#catChips');
+  const cats=['ALL', ...DATA.vocab.map(v=>v.cat)];
+  c.innerHTML=cats.map(k=>{
+    const label = k==='ALL'?'全部 ('+DATA.vocab.reduce((a,v)=>a+v.terms.length,0)+')':k;
+    const cnt = k==='ALL'?'':(' ('+DATA.vocab.find(v=>v.cat===k).terms.length+')');
+    return '<span class="chip '+(curCat===k?'on':'')+'" data-cat="'+esc(k)+'">'+esc(label)+'</span>';
+  }).join('');
+  c.querySelectorAll('.chip').forEach(ch=>ch.addEventListener('click',()=>{
+    curCat=ch.dataset.cat; buildChips(); renderVocab();
+  }));
+}
+function extraRows(t){
+  let h='';
+  if(t.full) h+='<div class="row"><span class="tag">全称</span><b>'+esc(t.full)+'</b></div>';
+  if(t.subcat) h+='<div class="row"><span class="tag">'+esc(t.subcat)+'</span></div>';
+  if(t.note) h+='<div class="row tip">📌 <b>'+esc(t.note)+'</b></div>';
+  if(t.diag) h+='<div class="row diag">🩺 <b>诊断重点：</b>'+esc(t.diag)+'</div>';
+  if(t.ask) h+='<div class="row ask">💡 <b>可继续问：</b>'+esc(t.ask)+'</div>';
+  if(t.feedback) h+='<div class="row ask">🎯 <b>反馈重点：</b>'+esc(t.feedback)+'</div>';
+  if(t.bg) h+='<div class="row bg">🌏 <b>背景：</b>'+esc(t.bg)+'</div>';
+  if(t.forbid) h+='<div class="row forbid">🚫 <b>不要假设：</b>'+esc(t.forbid)+'</div>';
+  return h;
+}
+function vocabCardHTML(t){
+  const id=t._id;
+  const ex = t.ex ? '<div class="ex" data-spk="'+esc(t.ex)+'"><span class="lbl">家长可能说</span>'+esc(t.ex)+' <span class="spk">🔊</span></div>' : '';
+  return '<div class="card">'+
+    '<button class="star '+(isFav(id)?'on':'')+'" data-fav="'+esc(id)+'">★</button>'+
+    '<div class="en" data-spk="'+esc(t.en)+'">'+esc(t.en)+' <span class="spk">🔊</span></div>'+
+    '<div class="zh">'+esc(t.zh)+'</div>'+
+    ex + extraRows(t) +
+    '</div>';
+}
+function renderVocab(){
+  const q=$('#vocabSearch').value.trim().toLowerCase();
+  const g=$('#vocabGrid'); let html='';
+  DATA.vocab.forEach(c=>{
+    if(curCat!=='ALL' && c.cat!==curCat) return;
+    const terms=c.terms.filter(t=>{
+      if(!q) return true;
+      return (t.en+' '+t.zh+' '+(t.ex||'')+' '+(t.full||'')).toLowerCase().includes(q);
+    });
+    if(!terms.length) return;
+    html+='<div style="margin:14px 2px 8px;color:var(--accent2);font-weight:700;font-size:14px">'+esc(c.cat)+' <span style="color:var(--sub);font-weight:400">('+terms.length+')</span></div>';
+    html+=terms.map(vocabCardHTML).join('');
+  });
+  g.innerHTML = html || '<div class="empty">没有匹配的内容</div>';
+}
+function refreshStars(){
+  document.querySelectorAll('[data-fav]').forEach(b=>{
+    const on=isFav(b.getAttribute('data-fav'));
+    b.classList.toggle('on',on); b.textContent='★';
+  });
+}
+$('#vocabSearch').addEventListener('input', renderVocab);
+
+/* ---------- sentences ---------- */
+function renderSent(){
+  $('#sentBox').innerHTML=DATA.sentences.map((s,i)=>
+    '<div class="sent"><div class="num">真实句式 #'+(i+1)+'</div>'+
+    '<div class="en-line" data-spk="'+esc(s.en)+'">'+esc(s.en)+' <span class="spk">🔊</span></div>'+
+    '<div class="zh-line">'+esc(s.zh)+'</div></div>'
+  ).join('');
+}
+
+/* ---------- manglish ---------- */
+function renderMgl(){
+  $('#mglBox').innerHTML=DATA.manglish.map(m=>
+    '<div class="mgl">'+
+    '<div class="exp" data-spk="'+esc(m.en)+'">'+esc(m.en)+' <span class="spk">🔊</span></div>'+
+    (m.zh?'<div class="row"><span>意思</span>'+esc(m.zh)+'</div>':'')+
+    (m.scene?'<div class="row"><span>场景</span>'+esc(m.scene)+'</div>':'')+
+    (m.cc?'<div class="row ask"><span>CC建议</span>'+esc(m.cc)+'</div>':'')+
+    (m.risk?'<div class="risk">⚠️ '+esc(m.risk)+'</div>':'')+
+    '</div>'
+  ).join('');
+}
+
+/* ---------- company ---------- */
+function renderComp(){
+  $('#compBox').innerHTML=DATA.company.map(c=>
+    '<div class="qa">'+
+    '<div class="q">🙋 '+esc(c.q)+'</div>'+
+    '<div class="blk a"><div class="h">✅ 推荐回答</div>'+esc(c.a)+'</div>'+
+    (c.worry?'<div class="blk worry"><div class="h">😟 客户真正担心</div>'+esc(c.worry)+'</div>':'')+
+    (c.next?'<div class="blk next"><div class="h">➡️ CC下一步</div>'+esc(c.next)+'</div>':'')+
+    (c.ban?'<div class="ban"><div class="h">⛔ 禁区</div>'+esc(c.ban)+'</div>':'')+
+    '</div>'
+  ).join('');
+}
+
+/* ---------- principles ---------- */
+function renderPrin(){
+  let h=DATA.principles.rules.map(r=>'<div class="rule"><span class="t">'+esc(r.text)+'</span>'+
+    (r.desc?' <span style="color:var(--sub);font-size:13px">— '+esc(r.desc)+'</span>':'')+'</div>').join('');
+  h+=DATA.principles.examples.map(p=>
+    '<div class="pr"><div class="scene">📍 '+esc(p.scene)+'</div>'+
+    '<div class="bad"><span class="k">不够自然</span>'+esc(p.bad)+'</div>'+
+    (p.good?'<div class="good"><span class="k">更自然</span>'+esc(p.good)+'</div>':'')+
+    '</div>'
+  ).join('');
+  $('#prinBox').innerHTML=h;
+}
+
+/* ---------- quiz ---------- */
+let qPool=[], qIdx=0, qCorrect=0, qTotal=0, qLocked=false, qCur=null;
+function rand(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
+function buildPool(){
+  qPool=[];
+  DATA.vocab.forEach(c=>c.terms.forEach(t=>{ if(t.zh) qPool.push({en:t.en,zh:t.zh}); }));
+  for(let i=qPool.length-1;i>0;i--){ const j=rand(0,i); [qPool[i],qPool[j]]=[qPool[j],qPool[i]]; }
+  qPool=qPool.slice(0, Math.min(40, qPool.length));
+}
+function restartQuiz(){ buildPool(); qIdx=0; qCorrect=0; qTotal=0; qLocked=false; nextQuiz(); }
+function nextQuiz(){
+  if(qIdx>=qPool.length){ $('#quizBox').innerHTML='<div class="empty">🎉 测验完成！正确 <b style="color:var(--accent2)">'+qCorrect+'</b> / '+qTotal+'<br><span style="font-size:12px">点右上角「重新开始」再来一轮</span></div>'; return; }
+  qCur=qPool[qIdx]; qLocked=false;
+  const wrong=DATA.vocab.flatMap(c=>c.terms.map(t=>t.zh)).filter(z=>z && z!==qCur.zh);
+  const opts=[qCur.zh];
+  while(opts.length<4 && wrong.length){ const w=wrong[rand(0,wrong.length-1)]; if(!opts.includes(w)) opts.push(w); }
+  for(let i=opts.length-1;i>0;i--){ const j=rand(0,i); [opts[i],opts[j]]=[opts[j],opts[i]]; }
+  $('#quizBox').innerHTML=
+    '<div class="quiz-prog">第 '+(qIdx+1)+' / '+qPool.length+' 题</div>'+
+    '<div class="quiz-en" data-spk="'+esc(qCur.en)+'">'+esc(qCur.en)+' <span class="spk">🔊</span></div>'+
+    '<button class="btn blue" data-spk="'+esc(qCur.en)+'">🔊 听发音</button>'+
+    '<div class="quiz-opts">'+opts.map(o=>'<button class="opt" data-o="'+esc(o)+'">'+esc(o)+'</button>').join('')+'</div>'+
+    '<div class="quiz-score">正确 <b id="qc">'+qCorrect+'</b> / '+qTotal+'</div>';
+  $('#quizBox').querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>answer(b.dataset.o)));
+}
+function answer(o){
+  if(qLocked) return; qLocked=true; qTotal++;
+  $('#quizBox').querySelectorAll('.opt').forEach(b=>{
+    if(b.dataset.o===qCur.zh){ b.classList.add('correct'); }
+    else if(b.dataset.o===o){ b.classList.add('wrong'); }
+    else b.classList.add('dim');
+  });
+  if(o===qCur.zh) qCorrect++;
+  $('#qc').textContent=qCorrect;
+  setTimeout(()=>{ qIdx++; nextQuiz(); }, 850);
+}
+
+/* ---------- favorites ---------- */
+function renderFav(){
+  const g=$('#favGrid'); const fav=getFav();
+  if(!fav.length){ g.innerHTML='<div class="empty">还没有收藏。在任意卡片点 ★ 收藏生词 / 句式。</div>'; return; }
+  g.innerHTML=fav.map(id=>{
+    const it=IDMAP[id]; if(!it) return '';
+    const en=it.en||it.q||''; const zh=it.zh||it.a||'';
+    const ex=it.ex?'<div class="ex" data-spk="'+esc(it.ex)+'"><span class="lbl">家长可能说</span>'+esc(it.ex)+' <span class="spk">🔊</span></div>':'';
+    const extra=it.kind==='vocab'?extraRows(it):'';
+    return '<div class="card"><button class="star on" data-fav="'+esc(id)+'">★</button>'+
+      '<div class="en" data-spk="'+esc(en)+'">'+esc(en)+' <span class="spk">🔊</span></div>'+
+      '<div class="zh">'+esc(zh)+'</div>'+ex+extra+'</div>';
+  }).join('');
+}
+
+/* ---------- about ---------- */
+function renderAbout(){
+  const total = DATA.vocab.reduce((a,c)=>a+c.terms.length,0);
+  $('#aboutStats').innerHTML=
+    '<span class="stat">单词/术语 '+total+' 条</span>'+
+    '<span class="stat">分场景(天) '+DATA.days.length+' 天</span>'+
+    '<span class="stat">真实句式 '+DATA.sentences.length+' 条</span>'+
+    '<span class="stat">Manglish '+DATA.manglish.length+' 条</span>'+
+    '<span class="stat">公司问答 '+DATA.company.length+' 条</span>'+
+    '<span class="stat">语言原则 '+DATA.principles.examples.length+' 组</span>';
+  $('#srcBox').innerHTML=DATA.sources.map(s=>
+    '<div class="src"><b>'+esc(s.src)+'</b> — '+esc(s.cover)+(s.note?' <br><span style="color:var(--sub)">'+esc(s.note)+'</span>':'')+'</div>'
+  ).join('');
+}
+
+/* ---------- init ---------- */
+function initDaily(){
+  $('#totalDays').textContent=DATA.days.length;
+  $('#todayDate').textContent=todayStr();
+  $('#streakN').textContent=calcStreak();
+  // 跳到第一个未打卡的天
+  const firstUndone=DATA.days.find(d=>!isDayDone(dayKeyOf(d)));
+  curDay = firstUndone ? firstUndone.day : 1;
+  renderDay();
+}
+buildChips();
+renderVocab();
+renderSent();
+renderMgl();
+renderComp();
+renderPrin();
+initDaily();
+</script>
+</body>
+</html>
